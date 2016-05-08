@@ -17,9 +17,9 @@ public class TestController {
 
     @RequestMapping(value = "getAll")
     @ResponseBody
-    public List<Test> getAll() {
-        PageHelper.startPage(1, 2);
-        List<Test> testList=testService.getAll();
+    public List<Test> getAll(int pageNum) {
+        PageHelper.startPage(pageNum, 5);
+        List<Test> testList=this.testService.getAll();
         return testList;
     }
 }

@@ -1,0 +1,11 @@
+<insert id="insertList" useGeneratedKeys="true" parameterType="java.util.List">
+        <selectKey resultType="INTEGER" keyProperty="id" order="AFTER">
+            SELECT
+            LAST_INSERT_ID()
+        </selectKey>
+        insert into test (test)
+        values
+        <foreach collection="list" item="item" index="index" separator="," >
+            (#{item.test})
+        </foreach>
+    </insert>

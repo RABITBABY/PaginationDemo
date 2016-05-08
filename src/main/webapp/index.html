@@ -24,26 +24,57 @@
     <script>
         angular.module('PaginationApp', [])
                 .controller('PageListController', function ($scope, $http) {
-                    $http.get("getAll").success(function (response) {
+                    var pageNum = 1;
+                    var load = true;
+
+                    function getUrl() {
+                        console.log('pageNum:', pageNum);
+                        /**/
+                        return "getAll?pageNum=" + pageNum;
+                    }
+
+                    $http.get(getUrl()).success(function (response) {
                         $scope.PageList = response;
+                        console.log('$scope.PageList:', $scope.PageList);
+                        /**/
+                    });
+                    $(window).scroll(function () {
+                        if (load)
+                            if ($(document).height() - $(window).height() - $(document).scrollTop() < 100) {
+                                load = false;
+                                pageNum++;
+                                var Item;
+                                console.log('getUrl():', getUrl());
+                                /**/
+                                $http.get(getUrl()).success(function (response) {
+                                    Item = response;
+                                    console.log('Item:', Item);
+                                    /**/
+                                    angular.forEach(Item, function (item) {
+                                        console.log('item:', item);
+                                        $scope.PageList.push(item);
+                                    });
+                                });
+                                console.log('after push,$scope.PageList:', $scope.PageList);
+                                /**/
+                                load = true;
+                            }
                     });
                 });
     </script>
 </head>
 <body>
 
-<div class="container" ng-app="PaginationApp" ng-controller="PageListController">
+<div class="container-fluid" ng-app="PaginationApp" ng-controller="PageListController">
 
-    <div class="panel panel-default" ng-repeat="x in PageList">
-        <div class="panel-heading">
-            <h3 class="panel-title">Panel title</h3>
+    <div class="thumbnail" ng-repeat="x in PageList">
+        <img src="" alt="">
+        <div class="caption">
+            <h3>{{x.id}}</h3>
+            <p>{{x.test}}</p>
+            <p><a href="#" class="btn btn-primary" role="button">Button</a> <a href="#" class="btn btn-default"
+                                                                               role="button">Button</a></p>
         </div>
-        <div class="panel-body">
-            <label>ID:</label>{{x.id}}
-            <br/>
-            <label>Test:</label>{{x.test}}
-        </div>
-        <div class="panel-footer">Panel footer</div>
     </div>
 
 </div>
